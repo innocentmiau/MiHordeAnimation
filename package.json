@@ -1,0 +1,38 @@
+{
+  "name": "com.andreleandrodev.mihordeanimation",
+  "displayName": "MiHordeAnimation",
+  "version": "0.1.0",
+  "unity": "6000.3",
+  "unityRelease": "0f1",
+  "description": "Drives MiVertexAnimation clips from a MiHordeTraffic crowd, from one manager rather than a script on every entity. Bodies register once and are never dispatched again: the per frame work is a transform job and a Burst scan that hands back only the handful of bodies whose animation should change, so a crowd of thousands standing still costs nothing at all. Ships with proximity attacks, where every body that comes within range of the target plays a clip once and sits out a cooldown.",
+  "author": {
+    "name": "Andre Leandro",
+    "url": "https://github.com/innocentmiau",
+    "email": "andreleandro.dev@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/innocentmiau/MiHordeAnimation.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "vat",
+    "vertex-animation",
+    "animation",
+    "crowd",
+    "horde",
+    "flowfield",
+    "burst",
+    "jobs",
+    "performance"
+  ],
+  "dependencies": {
+    "com.andreleandrodev.mihordetraffic": "0.2.0",
+    "com.andreleandrodev.mivertexanimation": "1.4.1",
+    "com.unity.burst": "1.8.30",
+    "com.unity.collections": "2.6.8",
+    "com.unity.mathematics": "1.3.3"
+  },
+  "documentationUrl": "https://github.com/innocentmiau/MiHordeAnimation#readme",
+  "licensesUrl": "https://github.com/innocentmiau/MiHordeAnimation/blob/main/LICENSE.md"
+}
