@@ -109,6 +109,13 @@ namespace MiHordeAnimation
         /// </summary>
         public int BodyCount => _bodies.Count;
 
+        /*
+         * Cached against the transform it was found on, since a target that never changes would otherwise cost a
+         * GetComponent every frame to be told the same thing.
+         */
+        private Transform _shapeSource;
+        private HordeTarget _shape;
+
         /// <summary>
         /// How many bodies were started on the clip last frame, which is what to watch when tuning the cooldown.
         /// </summary>
@@ -187,6 +194,8 @@ namespace MiHordeAnimation
 
             if (!destination || _bodies.Count == 0) return;
 
+            HordeGoalArea area = ResolveArea(destination);
+
             _due.Clear();
 
             /*
@@ -204,7 +213,7 @@ namespace MiHordeAnimation
                     Positions = _positions,
                     NextAllowed = _nextAllowed,
                     Due = _due,
-                    Target = destination.position,
+                    Target = area,
                     RangeSquared = range * range,
                     Now = Time.time,
                     Cooldown = cooldown,
@@ -218,6 +227,26 @@ namespace MiHordeAnimation
                 PlayDue();
 
             PlayedLastFrame = _due.Length;
+        }
+
+        /*
+         * Taken from the driver when this is chasing the same thing the crowd is, so a shaped target is described
+         * once and both agree about where its edge is. A target set here by hand is asked for its own shape, and
+         * anything without one is a point, which is what every target was before shapes existed.
+         */
+        private HordeGoalArea ResolveArea(Transform destination)
+        {
+            HordeFlowFieldDriver driver = HordeFlowFieldDriver.Instance;
+
+            if (driver && driver.Target == destination) return driver.GoalArea;
+
+            if (_shapeSource != destination)
+            {
+                _shapeSource = destination;
+                _shape = destination.GetComponent<HordeTarget>();
+            }
+
+            return _shape ? _shape.Area : HordeGoalArea.Point(destination.position);
         }
 
         private Transform ResolveTarget()

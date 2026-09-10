@@ -1,3 +1,4 @@
+using MiHordeTraffic.Pathing.FlowField;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -31,7 +32,12 @@ namespace MiHordeAnimation
         public NativeArray<float> NextAllowed;
         public NativeList<int> Due;
 
-        public float3 Target;
+        /*
+         * The target with its size, so range is measured from the nearest part of it rather than from its middle.
+         * On anything with a footprint those are different by half its width, and measuring from the middle puts
+         * a crowd pressed against a wall out of range of the thing it is standing on.
+         */
+        public HordeGoalArea Target;
         public float RangeSquared;
         public float Now;
         public float Cooldown;
@@ -48,7 +54,9 @@ namespace MiHordeAnimation
                  * standing on a step or floating a metre up would otherwise push every body in the crowd out of
                  * range at once, and the failure looks like the range value being ignored.
                  */
-                if (math.distancesq(Positions[i].xz, Target.xz) > RangeSquared) continue;
+                float toTarget = Target.Distance(Positions[i].xz);
+
+                if (toTarget * toTarget > RangeSquared) continue;
 
                 NextAllowed[i] = Now + Cooldown;
                 Due.Add(i);
