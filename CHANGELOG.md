@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.3.2]
+
+### Fixed
+
+- **A body could walk while playing its idle clip, indefinitely.** `HordeAnimations` caches which clip it believes a body is on, and `HordeAttackAnimator` changes that clip behind its back: a one-shot ends by crossfading into the return clip it was given, which the locomotion manager did not choose and never hears about. So a body that attacked while walking came out of the attack on the attack's idle, while the cache still said walk and the scan still wanted walk. Nothing differed, nothing was queued, and it stayed wrong until its gait happened to change for another reason.
+
+  Refusing to interrupt a one-shot only ever solved half of this. It stopped the gait cutting an attack off, and did nothing about the attack leaving the gait describing a clip that is no longer playing.
+
+  With clip variety on it was visible even standing still, because the attack's return clip is one fixed index while each body picks its own idle.
+
+### Added
+
+- **`HordeAnimations.ForgetClip(body)`**, which tells the manager it no longer knows what a body is playing so it re-asserts on the next check. `HordeAttackAnimator` calls it whenever it plays. Call it yourself alongside any direct `PlayOnce` of your own, for a flinch or a cast, or the same staleness comes back.
+
+- **`HordeGait.UNKNOWN`**, the value that means exactly that. It is numbered so it can never equal a gait the scan works out, which is what makes the body queue for a fresh decision. A death is never forgotten: re-asserting one would be the corpse standing up.
+
 ## 0.3.1
 
 Missing meta files added.

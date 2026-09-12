@@ -279,6 +279,16 @@ namespace MiHordeAnimation
                 if (!animator) continue;
 
                 animator.PlayOnce(clip, _returnClip[slot]);
+
+                /*
+                 * So the locomotion manager knows its cached clip for this body is no longer true. The return clip
+                 * above is this manager's answer to what should play afterwards, and it is a fixed index that
+                 * knows nothing about which idle that body was given or whether it is still walking.
+                 *
+                 * Null when a scene has no locomotion manager, which is the ordinary case for the attack half on
+                 * its own, and then the return clip is the whole answer and correct.
+                 */
+                if (HordeAnimations.Instance) HordeAnimations.Instance.ForgetClip(_bodies[slot]);
             }
         }
 

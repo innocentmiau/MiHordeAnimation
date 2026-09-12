@@ -18,6 +18,15 @@ namespace MiHordeAnimation
         WALKING,
         RUNNING,
         SPAWNING, // playing its entrance, and not to be interrupted
-        DEAD // holding the last frame of its death, and never leaving this state
+        DEAD, // holding the last frame of its death, and never leaving this state
+
+        /*
+         * Not a state a body is in, a statement that the manager no longer knows which it is in. Something played
+         * a clip directly, so the cached answer is a lie and has to be thrown away rather than trusted.
+         *
+         * Numbered far out of the way so it can never equal a gait the scan works out, which is exactly what makes
+         * the body queue for a fresh decision on the next check.
+         */
+        UNKNOWN = 255 // something else took the clip over, so whatever was cached is no longer true
     }
 }

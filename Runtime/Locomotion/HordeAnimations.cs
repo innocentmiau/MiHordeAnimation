@@ -237,6 +237,42 @@ namespace MiHordeAnimation
             return true;
         }
 
+        /*
+         * The other half of not interrupting a one-shot. Refusing to cut an attack off keeps this manager from
+         * breaking the attack, and does nothing about the attack breaking this manager: a one-shot ends by
+         * crossfading into whatever return clip it was given, which is a clip this manager did not choose and does
+         * not know about, while its cached gait still names the one from before.
+         *
+         * That goes wrong quietly. A body that attacks while walking comes out of it on the attack's idle, the
+         * scan still wants a walk, the cache still says walk, so nothing is queued and the body walks on its idle
+         * clip for as long as its gait happens not to change. With clip variety on it is worse, since the return
+         * clip is one fixed index and every body picked its own.
+         *
+         * Forgetting costs one byte written once, at the moment something else plays. The next check finds a value
+         * no computed gait can equal, queues the body, waits out the one-shot and puts back the right clip.
+         */
+        /// <summary>
+        /// Tells this manager it no longer knows what a body is playing, so it re-asserts the clip on the next check.
+        /// Call it whenever something plays a clip on a body directly.
+        /// </summary>
+        /// <param name="body">The body whose clip was taken over.</param>
+        public void ForgetClip(HordeAnimationBody body)
+        {
+            if (!body) return;
+
+            int index = body.GaitIndex;
+
+            if (index < 0 || index >= _bodies.Count) return;
+
+            /*
+             * A death is the one thing that is never re-asserted. It is meant to hold its last frame for good, and
+             * putting a body back on its idle because something played over it would be the corpse standing up.
+             */
+            if (_gait[index] == (byte)HordeGait.DEAD) return;
+
+            _gait[index] = (byte)HordeGait.UNKNOWN;
+        }
+
         /// <summary>
         /// How fast this manager measured a body to be travelling, in metres per second on the ground plane.
         /// </summary>
