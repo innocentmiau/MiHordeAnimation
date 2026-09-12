@@ -1,7 +1,7 @@
 {
   "name": "com.andreleandrodev.mihordeanimation",
   "displayName": "MiHordeAnimation",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "unity": "6000.3",
   "unityRelease": "0f1",
   "description": "Drives MiVertexAnimation clips from a MiHordeTraffic crowd, from one manager rather than a script on every entity. Bodies register once and are never dispatched again: the per frame work is a transform job and a Burst scan that hands back only the handful of bodies whose animation should change, so a crowd of thousands standing still costs nothing at all. Ships with proximity attacks, where every body that comes within range of the target plays a clip once and sits out a cooldown.",

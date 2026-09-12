@@ -2,6 +2,11 @@
 
 All notable changes to this package are documented here.
 
+## 0.3.1
+
+Missing meta files added.
+
+
 ## [0.3.0]
 
 ### Requires
