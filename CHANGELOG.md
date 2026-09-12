@@ -6,7 +6,7 @@ All notable changes to this package are documented here.
 
 ### Requires
 
-MiHordeTraffic **0.7.1** and MiVertexAnimation **1.5.1**, which adds the `IsPlayingOnce` this needs to avoid cutting off an attack.
+MiHordeTraffic **0.7.1** and MiVertexAnimation **1.6.3**, which adds the `IsPlayingOnce` this needs to avoid cutting off an attack.
 
 ### Added
 
