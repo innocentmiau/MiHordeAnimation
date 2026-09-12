@@ -32,9 +32,19 @@ namespace MiHordeAnimation
         public VATAnimator Animator => animator;
 
         /// <summary>
-        /// Where this body sits in the manager's roster, or minus one when it is not registered.
+        /// Where this body sits in the attack manager's roster, or minus one when it is not registered.
         /// </summary>
         public int AnimationIndex { get; set; } = -1;
+
+        /*
+         * A second slot rather than one shared between the managers, because the two rosters are filled and
+         * emptied independently: a scene can have either manager, both, or neither, and a body has to be able to
+         * hold a place in one while being absent from the other.
+         */
+        /// <summary>
+        /// Where this body sits in the locomotion manager's roster, or minus one when it is not registered.
+        /// </summary>
+        public int GaitIndex { get; set; } = -1;
 
         private void Reset() => animator = GetComponentInChildren<VATAnimator>(true);
 
@@ -43,9 +53,14 @@ namespace MiHordeAnimation
             animator = animator ? animator : GetComponentInChildren<VATAnimator>(true);
 
             HordeAttackAnimator.Register(this);
+            HordeAnimations.Register(this);
         }
 
-        private void OnDisable() => HordeAttackAnimator.Unregister(this);
+        private void OnDisable()
+        {
+            HordeAttackAnimator.Unregister(this);
+            HordeAnimations.Unregister(this);
+        }
 
     }
 }
